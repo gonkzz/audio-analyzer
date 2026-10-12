@@ -2,14 +2,14 @@
 
 A work-in-progress audio transcription and music practice tool.
 
-The goal is to build an application that helps musicians learn songs by ear, with the added ability to **detect and suggest the underlying harmony** in real time.
+The goal is to build an application that helps musicians analyze and learn songs by ear. It features a piano-roll spectrogram that shows an approximation of the notes being played, alongside real-time suggestions of the underlying harmony.
 
 ## Planned Features
 
 - Load and play audio files.
-- Slow down playback without changing pitch.
+- Slow down playback.
 - Loop specific sections.
-- Analyze audio and suggest the harmony currently being played.
+- Suggest the harmony currently being played.
 
 ## Status
 
