@@ -1,4 +1,6 @@
-# Audio Transcribe
+# audio-analyzer
+
+<img src="assets/icon.png" alt="" width="140">
 
 A work-in-progress audio transcription and music practice tool.
 
