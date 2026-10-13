@@ -1,18 +1,23 @@
-# audio-analyzer
+# audio-painter
 
 <img src="assets/icon.png" alt="" width="140">
 
-A work-in-progress audio transcription and music practice tool.
+This started as a tool for learning music by ear. Then I plotted a spectrogram of Charlie Parker warming up and kept staring at it, so now it's turning into something that paints music instead.
 
-The goal is to build an application that helps musicians analyze and learn songs by ear. It features a piano-roll spectrogram that shows an approximation of the notes being played, alongside real-time suggestions of the underlying harmony.
+So far it's a short-time Fourier transform in Python with [NumPy](https://numpy.org/) and [SciPy](https://scipy.org/), and a script that plots the result.
 
-## Planned Features
+I wrote about it here: [Getting Lost in Bird's Lines](https://goncalo-soares.com/blog/seeing-bird/).
 
-- Load and play audio files.
-- Slow down playback.
-- Loop specific sections.
-- Suggest the harmony currently being played.
+## Running
 
-## Status
+Requires [uv](https://docs.astral.sh/uv/) and an audio file.
 
-Early development. This is a personal project to explore audio processing, music analysis, and software development.
+```sh
+uv run scripts/plot_spectrogram.py path/to/clip.wav
+
+uv run pytest
+```
+
+## What's next
+
+Some kind of visualizer: you give it a recording and watch a painting being made in real time. I don't know yet what it looks like.
