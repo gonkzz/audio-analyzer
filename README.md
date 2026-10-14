@@ -18,6 +18,14 @@ uv run scripts/plot_spectrogram.py path/to/clip.wav
 uv run pytest
 ```
 
+To see the Charlie Parker clip from the post:
+
+```sh
+mkdir -p clips
+curl -o clips/bird.mp3 https://goncalo-soares.com/blog/seeing-bird/bird-practice-clip.mp3
+uv run scripts/plot_spectrogram.py clips/bird.mp3
+```
+
 ## What's next
 
 Some kind of visualizer: you give it a recording and watch a painting being made in real time. I don't know yet what it looks like.
