@@ -2,46 +2,46 @@ import numpy as np
 from audio_painter.spectral import stft
 
 
-def test_sine():
-    sr = 44100
-    n_fft = 4096
+def test_sine_wave_peaks_at_its_frequency():
+    sample_rate = 44100
+    frame_size = 4096
     frequency = 440
 
-    # Generate a 1-second A4 sine wave
-    t = np.arange(sr) / sr
-    x = np.sin(2 * np.pi * frequency * t)
+    # One second of an A4 sine wave
+    time = np.arange(sample_rate) / sample_rate
+    audio = np.sin(2 * np.pi * frequency * time)
 
-    S, freqs, times = stft(x, sr, n_fft=n_fft)
+    magnitudes, frequencies, times = stft(audio, sample_rate, frame_size=frame_size)
 
-    # Find the strongest frequency in every frame
-    peak_indices = np.argmax(S, axis=1)
-    peak_freqs = freqs[peak_indices]
+    # The loudest frequency in every frame
+    loudest = frequencies[np.argmax(magnitudes, axis=1)]
 
-    # Every peak must be within one frequency bin of 440 Hz
-    bin_width = sr / n_fft
-    assert np.all(np.abs(peak_freqs - frequency) <= bin_width)
-
-
-def test_shape():
-    sr = 44100
-    n_fft = 4096
-    hop = 1024
-
-    x = np.zeros(sr)
-
-    S, freqs, times = stft(x, sr, n_fft=n_fft, hop=hop)
-
-    expected_frames = 1 + (len(x) - n_fft) // hop
-    expected_bins = n_fft // 2 + 1
-
-    assert S.shape == (expected_frames, expected_bins)
-    assert S.shape == (len(times), len(freqs))
+    # Must be within one FFT bin of 440 Hz
+    bin_width = sample_rate / frame_size
+    assert np.all(np.abs(loudest - frequency) <= bin_width)
 
 
-def test_silence():
-    sr = 44100
-    x = np.zeros(sr)
+def test_output_shape():
+    sample_rate = 44100
+    frame_size = 4096
+    hop_size = 1024
+    audio = np.zeros(sample_rate)
 
-    S, freqs, times = stft(x, sr)
+    magnitudes, frequencies, times = stft(
+        audio, sample_rate, frame_size=frame_size, hop_size=hop_size
+    )
 
-    assert np.all(S == 0)
+    frame_count = 1 + (len(audio) - frame_size) // hop_size
+    bin_count = frame_size // 2 + 1
+
+    assert magnitudes.shape == (frame_count, bin_count)
+    assert magnitudes.shape == (len(times), len(frequencies))
+
+
+def test_silence_gives_zeros():
+    sample_rate = 44100
+    audio = np.zeros(sample_rate)
+
+    magnitudes, frequencies, times = stft(audio, sample_rate)
+
+    assert np.all(magnitudes == 0)

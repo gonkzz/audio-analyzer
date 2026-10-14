@@ -1,41 +1,36 @@
 import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 import soundfile as sf
 
-import matplotlib.pyplot as plt
-
 from audio_painter.spectral import stft
 
+MAX_FREQUENCY = 4000
+
+
 def main():
-    # 1. Get audio file from command line
-    path = sys.argv[1]
+    audio_path = sys.argv[1]
+    audio, sample_rate = sf.read(audio_path)
 
-    # 2. Load audio
-    audio, sr = sf.read(path)
-
-    # Convert stereo to mono
+    # Mix stereo down to mono
     if audio.ndim == 2:
         audio = np.mean(audio, axis=1)
 
-    # 3. Compute STFT
-    S, freqs, times = stft(audio, sr)
+    magnitudes, frequencies, times = stft(audio, sample_rate)
 
-    # 4. Convert magnitudes to decibels
-    S_db = 20 * np.log10(S.T + 1e-6)
+    # Decibels, so quiet harmonics stay visible
+    decibels = 20 * np.log10(magnitudes.T + 1e-6)
 
-    # 5. Plot spectrogram
+    # Only keep the range where melodies live
+    visible = frequencies <= MAX_FREQUENCY
+
     plt.figure(figsize=(12, 6))
-
-    keep = freqs <= 4000
-    plt.pcolormesh(times, freqs[keep], S_db[keep], shading="auto")
-
-    plt.ylim(0, 4000)
+    plt.pcolormesh(times, frequencies[visible], decibels[visible], shading="auto")
     plt.xlabel("Time (s)")
     plt.ylabel("Frequency (Hz)")
-    plt.title("Audio Spectrogram")
+    plt.title("Spectrogram")
     plt.colorbar(label="Magnitude (dB)")
-
     plt.tight_layout()
     plt.show()
 

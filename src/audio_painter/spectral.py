@@ -2,30 +2,31 @@ import numpy as np
 from scipy.signal import get_window
 
 
-def stft(x: np.ndarray,
-         sr: int,
-         n_fft: int = 4096,
-         hop: int = 1024):
+def stft(audio, sample_rate, frame_size=4096, hop_size=1024):
+    """Return frequency magnitudes, frequencies, and frame times."""
 
-    """Returns (S, freqs, times).
+    window = get_window("hann", frame_size)
 
-    S:     magnitudes, shape (n_frames, n_fft // 2 + 1)
-    freqs: frequency in Hz of each column
-    times: centre time in seconds of each frame
-    """
+    magnitudes = []
+    times = []
 
-    # 1. Divide audio into overlapping frames
-    frames = np.lib.stride_tricks.sliding_window_view(x, n_fft)[::hop]
+    for start in range(0, len(audio) - frame_size + 1, hop_size):
 
-    # 2. Apply Hann window to each frame
-    window = get_window("hann", n_fft)
-    windowed = frames * window
+        # Extract a short piece of audio
+        frame = audio[start:start + frame_size]
 
-    # 3. Compute FFT magnitudes
-    S = np.abs(np.fft.rfft(windowed, axis=1))
+        # Smooth the edges
+        frame = frame * window
 
-    # 4. Compute frequency and time axes
-    freqs = np.fft.rfftfreq(n_fft, d=1 / sr)
-    times = (np.arange(len(frames)) * hop + n_fft / 2) / sr
+        # Find the frequencies present in this frame
+        spectrum = np.fft.rfft(frame)
+        magnitudes.append(np.abs(spectrum))
 
-    return S, freqs, times
+        # Record the time at the centre of this frame
+        centre = start + frame_size / 2
+        times.append(centre / sample_rate)
+
+    # Find the frequency represented by each FFT bin
+    frequencies = np.fft.rfftfreq(frame_size, d=1 / sample_rate)
+
+    return np.stack(magnitudes), frequencies, np.array(times)
