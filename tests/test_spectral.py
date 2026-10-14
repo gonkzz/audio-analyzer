@@ -1,5 +1,5 @@
 import numpy as np
-from audio_transcribe.spectral import stft
+from audio_painter.spectral import stft
 
 
 def test_sine():

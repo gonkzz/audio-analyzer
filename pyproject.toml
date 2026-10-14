@@ -1,7 +1,7 @@
 [project]
-name = "audio-transcribe"
+name = "audio-painter"
 version = "0.1.0"
-description = "Add your description here"
+description = "Turning recordings into pictures, starting with a spectrogram."
 readme = "README.md"
 authors = [
     { name = "gonkzz", email = "gs.goncalosoares@gmail.com" }
@@ -11,9 +11,6 @@ dependencies = [
     "numpy>=2.4.6",
     "scipy>=1.17.1",
 ]
-
-[project.scripts]
-audio-transcribe = "audio_transcribe:main"
 
 [build-system]
 requires = ["uv_build>=0.11.2,<0.12.0"]

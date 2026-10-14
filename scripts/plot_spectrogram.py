@@ -5,7 +5,7 @@ import soundfile as sf
 
 import matplotlib.pyplot as plt
 
-from audio_transcribe.spectral import stft
+from audio_painter.spectral import stft
 
 def main():
     # 1. Get audio file from command line
